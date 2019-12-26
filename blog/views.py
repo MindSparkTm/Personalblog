@@ -21,6 +21,7 @@ class Home(CreateView):
         context = super(Home, self).get_context_data(**kwargs)
         print('post',Post.objects.all())
         context['post_list'] = Post.objects.all()
+        context['home_nav'] = 'active'
         return context
 
 def subscribe_user(request):
@@ -52,6 +53,10 @@ class CreatePost(CreateView):
     template_name = 'blog/post.html'
     success_url = reverse_lazy('blog:home')
 
+    def get_context_data(self, **kwargs):
+        context = super(CreatePost, self).get_context_data(**kwargs)
+        context['post_nav'] = 'active'
+        return context
 class PostDetailView(DetailView):
     model = Post
 
