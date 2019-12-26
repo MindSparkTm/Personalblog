@@ -1,0 +1,63 @@
+<div class="container-fluid">
+            <section class="cta-section theme-bg-light py-5">
+            <div class="container text-center">
+                <h2 class="heading">An Amazing blog built in Python and Django</h2>
+                <div class="intro">Welcome to my blog. Subscribe and get my latest blog post in your inbox.</div>
+                <form id="subscribe-form" action="{% url 'blog:subscribed_user' %}"
+                      class="signup-form form-inline justify-content-center pt-3" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="sr-only" for="semail">Your email</label>
+                        <input type="email" id="email" name="email" class="form-control mr-md-1 semail"
+                               placeholder="Enter email">
+                    </div>
+                    <input type="submit" id="subscribe" class="btn btn-primary" style="padding: 5px 10px;" value="Subscribe"/>
+                </form>
+            <br>
+                <div id="alert-block" class="alert alert-info" style="display:none;width: 70%;margin-left: 200px">
+                    <strong><span id="alert-msg"></span></strong>
+                </div>
+
+            </div><!--//container-->
+        </section>
+
+</div>
+        <script type="text/javascript">
+           $(document).on('submit', '#subscribe-form', function (e) {
+            event.preventDefault();
+            console.log("form submitted!")  // sanity check
+               if ($('#email').val()){
+                      $('#alert-block').show()
+            $.ajax({
+                url: '{% url "blog:subscribed_user" %}',
+                type: "POST", // http method
+                data: {
+                    email: $('#email').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }, // data sent with the post request
+                // handle a successful response
+                success: function (json) {
+                    $('#alert-msg').text(''); // remove the value from the input
+                    console.log(json.msg); // log the returned json to the console
+                    $('#alert-msg').text(json.msg); // remove the value from the input
+
+                },
+
+                // handle a non-successful response
+                error: function (xhr, errmsg, err) {
+                    $('#alert-msg').text(''); // remove the value from the input
+                    console.log(errmsg); // log the returned json to the console
+                    $('#alert-msg').text(errmsg); // remove the value from the input
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+               }
+               else{
+                   $('#alert-block').show()
+                    $('#alert-msg').text(''); // remove the value from the input
+                    $('#alert-msg').text('Please enter a valid Email to Subscribe'); //
+
+               }
+
+        });
+        </script>
