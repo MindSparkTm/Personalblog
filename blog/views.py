@@ -1,14 +1,14 @@
 from django.shortcuts import render,HttpResponse
 from django.http import JsonResponse
-from django.views.generic import CreateView,DetailView,DeleteView,UpdateView
+from django.views.generic import CreateView,DetailView,DeleteView,UpdateView,View
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404,redirect
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile,Post
-from .forms import PostForm
+from .forms import PostForm,UserForm
 from django.urls import reverse_lazy
-
+from django.contrib.auth import authenticate,login
 # Create your views here.
 
 class Home(CreateView):
@@ -69,3 +69,39 @@ class PostUpdateView(UpdateView):
     model = Post
     fields = ['title','description','image']
     template_name_suffix = '_update_form'
+
+class LoginView(View):
+
+    def get(self,request):
+        form = UserForm
+        return render(request,'blog/login.html',{'form':form})
+    def post(self,request):
+        try:
+            username = request.POST.get('username',None)
+            password = request.POST.get('password',None)
+            if username and password:
+                user = authenticate(username=username,password=password)
+                if user is not None:
+                    login(request,user)
+                    return redirect('blog:home')
+                else:
+                    return render(request,'blog/login.html',{'msg':'Invalid credentials'})
+            else:
+                return render(request, 'blog/login.html', {'msg': 'Please enter valid credentials'})
+        except Exception as e:
+            pass
+
+def RegisterView(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user=form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password')
+            print('username',username,raw_password)
+            login(request, user)
+            return redirect('blog:home')
+    else:
+        form = UserForm()
+    return render(request, 'blog/login.html', {'form': form})
+
