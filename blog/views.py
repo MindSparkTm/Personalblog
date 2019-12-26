@@ -17,16 +17,13 @@ class Home(CreateView):
     fields = '__all__'
 
     def get_context_data(self, **kwargs):
-        print('entered this')
         context = super(Home, self).get_context_data(**kwargs)
-        print('post',Post.objects.all())
         context['post_list'] = Post.objects.all()
         context['home_nav'] = 'active'
         return context
 
 def subscribe_user(request):
     if request.method == 'POST':
-        print('entered')
         email = request.POST.get("email",None)
         msg = 'You have been subscribed'
         if email is not None:
@@ -34,7 +31,6 @@ def subscribe_user(request):
                 user= User.objects.select_related('profile').get(email=email)
                 if getattr(user,'profile'):
                     subscribed = user.profile.subscribed
-                    print(subscribed)
                     if subscribed is False:
                         user.profile.subscribed = True
                         user.profile.save()
@@ -98,7 +94,6 @@ def RegisterView(request):
             user=form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')
-            print('username',username,raw_password)
             login(request, user)
             return redirect('blog:home')
     else:
