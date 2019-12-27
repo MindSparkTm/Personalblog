@@ -2,8 +2,7 @@ from django.shortcuts import render,HttpResponse
 from django.http import JsonResponse
 from django.views.generic import CreateView,DetailView,DeleteView,UpdateView,View
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404,redirect
-from django.contrib import messages
+from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserProfile,Post
 from .forms import PostForm,UserForm
@@ -92,8 +91,6 @@ def RegisterView(request):
         form = UserForm(request.POST)
         if form.is_valid():
             user=form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password')
             login(request, user)
             return redirect('blog:home')
     else:
