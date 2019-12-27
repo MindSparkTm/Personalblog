@@ -28,11 +28,9 @@ class UserProfile(models.Model):
 
     @shared_task
     def _send_email(username,email):
-        subject = "{user} submitted a new event!".format(
-        user=username)
-        message = """username: {username}
-        email: {email}""".format(username=username, email=email)
-        # Send to the user!
+        subject = "You have been added to Rj's mailing list"
+        message = "Hey Welcome to Rj's blog. You have been subscribed and you will receive some " \
+                  "amazing notifications when something awesome is published"
         send_mail(subject, message, 'smartsurajit2008@gmail.com',
                    [email])
 

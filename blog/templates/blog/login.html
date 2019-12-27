@@ -4,7 +4,7 @@
 <div class="container login-container">
     <div class="row">
         <div class="col-md-6 login-form-1">
-            <h3>Login for Form 1</h3>
+            <h3>Login</h3>
             <form method="POST" action="{% url 'blog:blog_login' %}">
                 {% csrf_token %}
                 <div class="form-group">
@@ -16,7 +16,7 @@
                            placeholder="Your Password *" value=""/>
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btnSubmit" value="Login"/>
+                    <input type="submit" class="btn-primary" value="Login"/>
                 </div>
                 <div class="form-group">
                     <a href="#" class="ForgetPwd">Forget Password?</a>
@@ -48,12 +48,9 @@
                    {{ form.confirm_password.label }} {{ form.confirm_password }}
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btnSubmit" value="Register"/>
+                    <input type="submit" class="btn btn-secondary" value="Register"/>
                 </div>
-                <div class="form-group">
 
-                    <a href="#" class="ForgetPwd" value="Login">Forget Password?</a>
-                </div>
             </form>
         </div>
     </div>

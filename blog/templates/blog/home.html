@@ -26,6 +26,8 @@
                             </p>
                         {% endautoescape %}
                                 </div>
+                                    {% if request.user == post.user %}
+
                                   <div class="row">
             <div class="col-md-3">
               <nav class="blog-nav nav nav-justified my-5" style="width: 50%">
@@ -43,6 +45,8 @@
             </nav>
             </div>
         </div>
+                                {% else %}
+                                {% endif %}
                                 </div>
 
                     {% endfor %}

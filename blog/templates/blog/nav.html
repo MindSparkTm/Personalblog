@@ -30,8 +30,8 @@
             <li class="nav-item {{ post_nav }}">
                 <a class="nav-link" href='{% url "blog:create_post" %}'><i class="fas fa-bookmark fa-fw mr-2"></i>Post</a>
             </li>
-            <li class="nav-item {{ status }}">
-                <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
+            <li class="nav-item {{ post_about_me }}">
+                <a class="nav-link" href="{% url 'blog:blog_about_me' %}"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
             </li>
         </ul>
 

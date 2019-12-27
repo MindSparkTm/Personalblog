@@ -17,7 +17,8 @@ class Home(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
-        context['post_list'] = Post.objects.filter(category='PROJECT',user=self.request.user)
+
+        context['post_list'] = Post.objects.filter(category='PROJECT')
         context['home_nav'] = 'active'
         return context
 
@@ -106,3 +107,14 @@ def RegisterView(request):
         form = UserForm()
     return render(request, 'blog/login.html', {'form': form})
 
+def AboutMe(request):
+    if request.method =='GET':
+        try:
+            post = Post.objects.filter(category='ABOUT ME',user=request.user)[0]
+        except Post.DoesNotExist:
+            post = None
+        except IndexError:
+            return redirect('blog:create_post')
+
+        else:
+            return render(request,'blog/about _me.html',{'post':post,'post_about_me':'active'})
