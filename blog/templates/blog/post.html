@@ -5,8 +5,7 @@
     <div class="main-wrapper">
         <section class="cta-section theme-bg-light py-5">
             <div class="container text-center">
-                <h2 class="heading">An Amazing blog built in Python and Django</h2>
-                <div class="intro">Welcome to my blog. Subscribe and get my latest blog post in your inbox.</div>
+                <h2 class="heading">Create a Post</h2>
                 <form id="post-form"
                       class="signup-form form-inline justify-content-center pt-3" enctype="multipart/form-data" method="POST">
                     {% csrf_token %}
@@ -25,7 +24,13 @@
                               {{ form.image }}
                           </label>
                       </div>
-                        <input type="submit"  class="btn btn-primary" value="Create"/>
+                     <div class="form-group">
+                          <label for="exampleInputEmail1" style="margin-bottom: 2em">Post Category &nbsp;&nbsp;
+                              {{ form.category }}
+                          </label>
+                         <input type="submit"  class="btn btn-primary" value="Create"/>
+
+                      </div>
 
                 </form>
 
