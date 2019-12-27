@@ -34,7 +34,7 @@ class CustomUserAdmin(UserAdmin):
         return super(CustomUserAdmin, self).get_inline_instances(request, obj)
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title','description')
+    list_display = ('title','category',)
 
 admin.site.register(Post,PostAdmin)
 admin.site.unregister(User)

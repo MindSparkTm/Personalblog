@@ -37,10 +37,15 @@ class UserProfile(models.Model):
                    [email])
 
 class Post(models.Model):
-
+    category = [
+        ('project', 'PROJECT'),
+        ('about me', 'ABOUT ME'),
+        ]
     title = models.CharField(max_length=100)
     description = HTMLField()
     image = models.ImageField(upload_to='images/',blank=True,null=True,default='images/blog-post-thumb-1.jpg')
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='post',null=True)
+    category = models.CharField(max_length=20,choices=category,default='project')
     date_last_modified = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
