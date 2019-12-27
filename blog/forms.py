@@ -17,7 +17,9 @@ class PostForm(BaseForm):
 
     class Meta:
         model = Post
-        fields = ('title','description','image',)
+        fields = ('title','description','image','category',)
+
+
 
 class UserForm(BaseForm):
 

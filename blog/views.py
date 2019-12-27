@@ -17,7 +17,7 @@ class Home(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
-        context['post_list'] = Post.objects.all()
+        context['post_list'] = Post.objects.filter(category='PROJECT',user=self.request.user)
         context['home_nav'] = 'active'
         return context
 
@@ -52,6 +52,15 @@ class CreatePost(CreateView):
         context = super(CreatePost, self).get_context_data(**kwargs)
         context['post_nav'] = 'active'
         return context
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return super(CreatePost,self).form_valid(form)
+
+
+
 class PostDetailView(DetailView):
     model = Post
 
