@@ -91,7 +91,7 @@ class LoginView(View):
             else:
                 return render(request, 'blog/login.html', {'msg': 'Please enter valid credentials'})
         except Exception as e:
-            pass
+            print('Exception',e)
 
 def RegisterView(request):
     if request.method == 'POST':
