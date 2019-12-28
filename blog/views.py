@@ -59,8 +59,6 @@ class CreatePost(CreateView):
         obj.save()
         return super(CreatePost,self).form_valid(form)
 
-
-
 class PostDetailView(DetailView):
     model = Post
 

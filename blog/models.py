@@ -57,8 +57,3 @@ class Post(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('blog:post_detail', args=[str(self.id)])
-
-
-
-
-
