@@ -21,16 +21,7 @@ import debug_toolbar
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('djoser.urls')),
-    url(r'^auth/', include('djoser.urls.jwt')),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^sms/', include('sms.urls')),
-    url(r'^payment/', include('payment.urls')),
-    url(r'^vyaas/', include('ussd.urls')),
     url(r'^blog/', include('blog.urls')),
-    url(r'^', include('django.contrib.auth.urls')),
-    url(r'^elkstack/',include('elkstack.urls')),
-    url(r'^__debug__/', include(debug_toolbar.urls)),
     url(r'^tinymce/', include('tinymce.urls')),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
