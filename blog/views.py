@@ -17,7 +17,6 @@ class Home(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
-
         context['post_list'] = Post.objects.filter(category='PROJECT')
         context['home_nav'] = 'active'
         return context
