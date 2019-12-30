@@ -1,0 +1,95 @@
+{% extends 'blog/index.html' %}
+{% load static %}
+{% block main %}
+
+    <div class="main-wrapper">
+        <section class="blog-list px-3 py-5 p-md-5">
+
+            <div class="container">
+                <div class="item mb-5">
+                            {% for post in post_list %}
+                                <div class="row" style="margin-bottom: 1em;">
+                                <div class="col-md-3 media">
+                                    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" width="110px" height="110px"
+                             src="{{ post.image.url }}" alt="image">
+                                </div>
+
+                                <div class="col-md-9 media-body">
+                                    <p class="h3"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+                                     {% autoescape off %}
+                                   <div class="meta mb-1"><span class="date">Published 2 days ago</span><span class="time">5 min read</span><span
+                                class="comment"><a href="#">8 comments</a></span></div>
+                            <p class="lead">
+                                {{ post.description|truncatewords:"100"|linebreaks }}
+                    <a class="more-link" href="{{ post.get_absolute_url }}"><p class="h6">Read more &rarr;</p></a>
+
+                            </p>
+                        {% endautoescape %}
+                                </div>
+                                    {% if request.user == post.user %}
+
+                                  <div class="row">
+            <div class="col-md-3">
+              <nav class="blog-nav nav nav-justified my-5" style="width: 50%">
+                <a class="nav-link-next nav-item nav-link rounded" href='{% url "blog:post_delete" pk=post.id %}'>
+                    <i class="fa fa-trash"></i>
+                    Delete</a>
+            </nav>
+
+            </div> &nbsp; &nbsp;
+            <div class="col-md-3">
+               <nav class="blog-nav nav nav-justified my-5" style="width:50%">
+                <a class="nav-link-next nav-item nav-link rounded" href='{% url "blog:post_update" pk=post.id %}'>
+                    <i class="fas fa-edit"></i>
+                    Edit</a>
+            </nav>
+            </div>
+        </div>
+                                {% else %}
+                                {% endif %}
+                                </div>
+
+                    {% endfor %}
+
+
+                    </div><!--//media-body-->
+            </div>
+
+            {% if is_paginated %}
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in paginator.page_range %}
+      {% if page_obj.number == i %}
+        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+      <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+    {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+            <nav class="blog-nav nav nav-justified my-5">
+                <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i
+                        class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+                <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i
+                        class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+            </nav>
+        </section>
+    </div>
+
+
+    <script type="text/javascript">
+
+
+
+    </script>
+
+{% endblock %}
