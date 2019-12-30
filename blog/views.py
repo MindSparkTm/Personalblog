@@ -120,30 +120,33 @@ def AboutMe(request):
             return render(request,'blog/about _me.html',{'post':post,'post_about_me':'active'})
 
 
-def DjangoPost(request):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='DJANGO')
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
+class DjangoPost(ListView):
+    template_name = 'blog/django.html'
+    model = Post
+    fields = '__all__'
+    paginate_by = 2
 
-        else:
-            return render(request,'blog/django.html',{'post':post,'post_django':'active'})
+    def get_queryset(self):
+        return Post.objects.filter(category='DJANGO')
 
+    def get_context_data(self, **kwargs):
+        context = super(DjangoPost, self).get_context_data(**kwargs)
+        context['post_django'] = 'active'
+        return context
 
-def PythonPost(request):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='PYTHON')
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
+class PythonPost(ListView):
+    template_name = 'blog/python.html'
+    model = Post
+    fields = '__all__'
+    paginate_by = 10
 
-        else:
-            return render(request,'blog/python.html',{'post':post,'post_python':'active'})
+    def get_queryset(self):
+        return Post.objects.filter(category='PYTHON')
+
+    def get_context_data(self, **kwargs):
+        context = super(PythonPost, self).get_context_data(**kwargs)
+        context['post_python'] = 'active'
+        return context
 
 def PythonPostDetail(request,python_pk):
     if request.method =='GET':
@@ -180,14 +183,16 @@ def OtherPostDetail(request,other_pk):
 
         else:
             return render(request,'blog/other_post_detail.html',{'post':post,'other_django':'active'})
-def OtherPost(request):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='OTHER')
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
+class OtherPost(ListView):
+    template_name = 'blog/other.html'
+    model = Post
+    fields = '__all__'
+    paginate_by = 10
 
-        else:
-            return render(request,'blog/other.html',{'post':post,'post_other':'active'})
+    def get_queryset(self):
+        return Post.objects.filter(category='OTHER')
+
+    def get_context_data(self, **kwargs):
+        context = super(OtherPost, self).get_context_data(**kwargs)
+        context['post_other'] = 'active'
+        return context
