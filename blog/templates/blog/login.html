@@ -1,0 +1,59 @@
+{% include 'blog/base.html' %}
+<html>
+<body>
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-6 login-form-1">
+            <h3>Login</h3>
+            <form method="POST" action="{% url 'blog:blog_login' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Your Username *"
+                           value=""/>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password"
+                           placeholder="Your Password *" value=""/>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn-primary" value="Login"/>
+                </div>
+                <div class="form-group">
+                    <a href="#" class="ForgetPwd">Forget Password?</a>
+                </div>
+                <div class="form-group">
+                    <p class="lead">{{ msg }}</p>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6 login-form-2">
+            <h3>Register for this amazing Blog</h3>
+            <form method="POST" action="{% url 'blog:blog_register' %}">
+                {% csrf_token %}
+                {% if form.errors %}
+                <h3>{{ form.non_field_errors }}</h3>
+
+                {% endif %}
+
+                <div class="form-group">
+                    {{ form.email.label }}{{ form.email }}
+                </div>
+                <div class="form-group">
+                   {{ form.username.label }} {{ form.username }}
+                </div>
+                <div class="form-group">
+                 {{ form.password.label }}   {{ form.password }}
+                </div>
+                <div class="form-group">
+                   {{ form.confirm_password.label }} {{ form.confirm_password }}
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-secondary" value="Register"/>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
