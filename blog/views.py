@@ -4,26 +4,20 @@ from django.views.generic import CreateView,DetailView,DeleteView,UpdateView,Vie
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 from django.core.exceptions import ObjectDoesNotExist
-from .models import UserProfile,Post
+from .models import UserProfile,Post,PostCategory
 from .forms import PostForm,UserForm
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login
+from django.urls import reverse
+from django.contrib import messages
+import logging
 # Create your views here.
 
-class Home(ListView):
-    template_name = 'blog/home.html'
-    model = Post
-    fields = '__all__'
-    paginate_by = 2
+logger = logging.getLogger(__name__)
 
-    def get_queryset(self):
-        return Post.objects.filter(category='PROJECT')
-
-    def get_context_data(self, **kwargs):
-        context = super(Home, self).get_context_data(**kwargs)
-        context['home_nav'] = 'active'
-        return context
-
+def home(request):
+    if request.method=='GET':
+        return redirect('blog:post_category_list',category='project')
 def subscribe_user(request):
     if request.method == 'POST':
         email = request.POST.get("email",None)
@@ -49,7 +43,6 @@ class CreatePost(CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/post.html'
-    success_url = reverse_lazy('blog:home')
 
     def get_context_data(self, **kwargs):
         context = super(CreatePost, self).get_context_data(**kwargs)
@@ -60,20 +53,56 @@ class CreatePost(CreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
         obj.save()
+        messages.success(self.request, "Your post has been successfully created")
         return super(CreatePost,self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog:post_detail',kwargs={'pk': self.object.pk})
 
 class PostDetailView(DetailView):
     model = Post
+    template_name= "blog/post_detail.html"
 
 class PostDeleteView(DeleteView):
     model = Post
-    success_url = reverse_lazy('blog:home')
+
+    def get_success_url(self):
+        post_category = Post.objects.get(id=self.object.pk)
+        category = post_category.category.lower()
+        return reverse('blog:post_category_list',kwargs={'category': category})
 
 
 class PostUpdateView(UpdateView):
     model = Post
     fields = ['title','description','image']
     template_name_suffix = '_update_form'
+
+    def get_success_url(self):
+        return reverse('blog:post_detail',kwargs={'pk': self.object.pk})
+
+
+class PostListView(ListView):
+    model = Post
+    fields = ['title','description','image']
+    template_name ='blog/post_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PostListView, self).get_context_data(**kwargs)
+        logger.info('Category: %s', str(self.kwargs['category']))
+        if self.kwargs['category']=='home':
+            self.kwargs['category']='Django'
+        category = PostCategory.objects.get(name=self.kwargs['category'])
+        logger.info('Post category: %s %s', str(category),str(self.kwargs['category']))
+        context['post_nav'] = 'active'
+        context['category_desc'] = category.description
+        logger.info('Post category description: %s', str(category.description))
+        return context
+
+    def get_queryset(self):
+        if self.kwargs['category']=='home':
+            self.kwargs['category']='project'
+        return Post.objects.select_related('category_name').filter(category=self.kwargs['category'])
+
 
 class LoginView(View):
 
@@ -88,13 +117,13 @@ class LoginView(View):
                 user = authenticate(username=username,password=password)
                 if user is not None:
                     login(request,user)
-                    return redirect('blog:home')
+                    return redirect('blog:post_category_list',category='project')
                 else:
                     return render(request,'blog/login.html',{'msg':'Invalid credentials'})
             else:
                 return render(request, 'blog/login.html', {'msg': 'Please enter valid credentials'})
         except Exception as e:
-            pass
+            print('Exception',e)
 
 def RegisterView(request):
     if request.method == 'POST':
@@ -102,7 +131,7 @@ def RegisterView(request):
         if form.is_valid():
             user=form.save()
             login(request, user)
-            return redirect('blog:home')
+            return redirect('blog:post_category_list',category='project')
     else:
         form = UserForm()
     return render(request, 'blog/login.html', {'form': form})
@@ -110,7 +139,7 @@ def RegisterView(request):
 def AboutMe(request):
     if request.method =='GET':
         try:
-            post = Post.objects.filter(category='ABOUT ME',user=request.user)[0]
+            post = Post.objects.filter(category='ABOUT ME')[0]
         except Post.DoesNotExist:
             post = None
         except IndexError:
@@ -120,79 +149,3 @@ def AboutMe(request):
             return render(request,'blog/about _me.html',{'post':post,'post_about_me':'active'})
 
 
-class DjangoPost(ListView):
-    template_name = 'blog/django.html'
-    model = Post
-    fields = '__all__'
-    paginate_by = 2
-
-    def get_queryset(self):
-        return Post.objects.filter(category='DJANGO')
-
-    def get_context_data(self, **kwargs):
-        context = super(DjangoPost, self).get_context_data(**kwargs)
-        context['post_django'] = 'active'
-        return context
-
-class PythonPost(ListView):
-    template_name = 'blog/python.html'
-    model = Post
-    fields = '__all__'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return Post.objects.filter(category='PYTHON')
-
-    def get_context_data(self, **kwargs):
-        context = super(PythonPost, self).get_context_data(**kwargs)
-        context['post_python'] = 'active'
-        return context
-
-def PythonPostDetail(request,python_pk):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='PYTHON',id=python_pk)[0]
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
-
-        else:
-            return render(request,'blog/python_post_detail.html',{'post':post,'post_python':'active'})
-
-def DjangoPostDetail(request,django_pk):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='DJANGO',id=django_pk)[0]
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
-
-        else:
-            return render(request,'blog/django_post_detail.html',{'post':post,'post_django':'active'})
-
-def OtherPostDetail(request,other_pk):
-    if request.method =='GET':
-        try:
-            post = Post.objects.filter(category='OTHER',id=other_pk)[0]
-        except Post.DoesNotExist:
-            post = None
-        except IndexError:
-            return redirect('blog:home')
-
-        else:
-            return render(request,'blog/other_post_detail.html',{'post':post,'other_django':'active'})
-class OtherPost(ListView):
-    template_name = 'blog/other.html'
-    model = Post
-    fields = '__all__'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return Post.objects.filter(category='OTHER')
-
-    def get_context_data(self, **kwargs):
-        context = super(OtherPost, self).get_context_data(**kwargs)
-        context['post_other'] = 'active'
-        return context

@@ -1,5 +1,8 @@
 {% extends 'blog/index.html' %}
 {% load static %}
+{% block title_block %}
+<title>Python and Django Projects</title>
+{% endblock title_block %}
 {% block main %}
 
     <div class="main-wrapper">
@@ -17,8 +20,7 @@
                                 <div class="col-md-9 media-body">
                                     <p class="h3"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
                                      {% autoescape off %}
-                                   <div class="meta mb-1"><span class="date">Published 2 days ago</span><span class="time">5 min read</span><span
-                                class="comment"><a href="#">8 comments</a></span></div>
+                                   <div class="meta mb-1"><span class="date">{{post.date_last_modified}}</span></div>
                             <p class="lead">
                                 {{ post.description|truncatewords:"100"|linebreaks }}
                     <a class="more-link" href="{{ post.get_absolute_url }}"><p class="h6">Read more &rarr;</p></a>
@@ -53,15 +55,31 @@
 
 
                     </div><!--//media-body-->
-            </div>
+            </div><!--//item---->
+            {% include 'blog/pagination.html' %}
 
-          {% include 'blog/pagination.html' %}
-            <nav class="blog-nav nav nav-justified my-5">
-                <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i
-                        class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
-                <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i
+            {% comment %}<div class="item">
+                <div class="media">
+                    <img class="mr-3 img-fluid post-thumb d-none d-md-flex"
+                         src="{% static 'blog/assets/images/blog/blog-post-thumb-6.jpg' %}" alt="image">
+                    <div class="media-body">
+                        <h3 class="title mb-1"><a href="blog-post.html">About Remote Working</a></h3>
+                        <div class="meta mb-1"><span class="date">Published 3 months ago</span><span class="time">2 min read</span><span
+                                class="comment"><a href="#">1 comment</a></span></div>
+                        <div class="intro">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo
+                            ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient
+                            montes, nascetur ridiculus mus. Donec quam felis, ultricies...
+                        </div>
+                        <a class="more-link" href="blog-post.html">Read more &rarr;</a>
+                    </div><!--//media-body-->
+                </div><!--//media-->
+            </div><!-{% endcomment %}
+
+           {% comment %} <nav class="blog-nav nav nav-justified my-5">
+
+                <a class="nav-link-next nav-item nav-link rounded" href="">Next<i
                         class="arrow-next fas fa-long-arrow-alt-right"></i></a>
-            </nav>
+            </nav><!-{% endcomment %}
         </section>
     </div>
 

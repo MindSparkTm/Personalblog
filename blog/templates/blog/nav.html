@@ -6,50 +6,44 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navigation" class="collapse navbar-collapse flex-column">
+    <div id="navigation" class="collapse navbar-collapse flex-column" style="flex-grow: 0;">
         <div class="profile-section pt-3 pt-lg-0">
-            <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'blog/assets/images/profile.png' %}" alt="image">
+          <a href="{% url 'blog:post_category_list' category='project' %}"> <img class="profile-image mb-3 rounded-circle mx-auto" src="{% static 'blog/assets/images/profile.png' %}" alt="image"></a>
 
             <div class="bio mb-3"><p class="h5" style="line-height: 25px">Hi, my name is Raaz. I am a software engineer and a fitness enthusiast. Love building solutions
-            that are fun and challenging.</p><br><a href="about.html">Find out more about me</a></div><!--//bio-->
+            that are fun and challenging.</p><br><a href="{% url 'blog:post_category_list' category='project' %}">Find out more about me</a></div><!--//bio-->
             <ul class="social-list list-inline py-3 mx-auto">
                 <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
-                <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+                <li class="list-inline-item"><a href="https://www.linkedin.com/in/surajit-das-2a704165/"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
                 <li class="list-inline-item"><a href="#"><i class="fab fa-github-alt fa-fw"></i></a></li>
                 <li class="list-inline-item"><a href="#"><i class="fab fa-stack-overflow fa-fw"></i></a></li>
                 <li class="list-inline-item"><a href="#"><i class="fab fa-codepen fa-fw"></i></a></li>
-            </ul><!--//social-list-->
-            <hr>
-        </div><!--//profile-section-->
 
-        <ul class="navbar-nav flex-column text-left">
-            <li class="nav-item {{ home_nav }}">
-                <a class="nav-link" href='{% url "blog:home" %}'><i class="fas fa-home fa-fw mr-2"></i>Home <span
+            </ul><!--//social-list-->
+            <ul class="list-inline py-3 mx-auto">
+               <li class="nav-item {{ home_nav }}">
+                <a style="color:#5bc3d5;"  href="{% url 'blog:post_category_list' category='project' %}">home <span
                         class="sr-only">(current)</span></a>
             </li>
             {% if request.user.username == 'surajit001' %}
             <li class="nav-item {{ post_nav }}">
-                <a class="nav-link" href='{% url "blog:create_post" %}'><i class="fas fa-bookmark fa-fw mr-2"></i>Post</a>
+                <a style="color:#5bc3d5;"  href='{% url "blog:create_post" %}'>Post</a>
             </li>
-            {% else %}
             {% endif %}
 
-         <li class="nav-item {{ post_django }}">
-                <a class="nav-link" href="{% url 'blog:blog_django' %}"><i class="fas fa-user fa-fw mr-2"></i>Django</a>
+          {% for c in category %}
+            <li class="nav-item {{ post_django }}">
+                <a class="nav-link" href='{{ c.url }}'>{{ c.name }}</a>
             </li>
-         <li class="nav-item {{ post_python }}">
-                <a class="nav-link" href="{% url 'blog:blog_python' %}"><i class="fas fa-user fa-fw mr-2"></i>Python</a>
-            </li>
-            <li class="nav-item {{ post_other }}">
-                <a class="nav-link" href="{% url 'blog:blog_other' %}"><i class="fas fa-user fa-fw mr-2"></i>Other</a>
-            </li>
-            <li class="nav-item {{ post_about_me }}">
-                <a class="nav-link" href="{% url 'blog:blog_about_me' %}"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
-            </li>
-        </ul>
+        {% endfor %}
+
+            </ul><!--//social-list-->
+            <hr>
+        </div><!--//profile-section-->
+
 
         <div class="my-2 my-md-3">
-            <a class="btn btn-primary" href="https://themes.3rdwavemedia.com/" target="_blank">Get in Touch</a>
+            <a class="btn btn-primary" href="" target="_blank">Get in Touch</a>
         </div>
     </div>
 </nav>

@@ -1,33 +1,38 @@
 {% extends 'blog/index.html' %}
 {% load static %}
+{% block blog_title %}
+<title>{{ post.title }}</title>
+{% endblock blog_title %}
 {% block main %}
 
     <div class="main-wrapper">
         <section class="blog-list px-3 py-5 p-md-5">
 
             <div class="container">
-                <div class="item mb-5">
-                                <div class="row" style="margin-bottom: 1em;">
-                                <div class="col-md-3 media">
-                                    <img class="mr-3 img-fluid post-thumb d-none d-md-flex"
+              <img  width="110px" height="110px"
                              src="{{ post.image.url }}" alt="image">
-                                </div>
-
-                                <div class="col-md-69 media-body">
-                                    <p class="h3"><a href="{{ post.get_absolute_url }}">{{ post.title|default:'Add a title' }}</a></p>
+             <p class="h3"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
                                      {% autoescape off %}
-                                   <div class="meta mb-1"><span class="date">Published on</span><span class="time">{{ post.date_last_modified }}</span>
+                                 <div class="meta mb-1"><span class="date">Published on</span><span class="time">{{ post.date_last_modified }}</span>
                                    </div>
                             <p class="lead">
-                                {{ post.description|linebreaks|default:'Add some info about yourself' }}
+                                {{ post.description|linebreaks }}
 
                             </p>
                         {% endautoescape %}
 
-                                </div>
+
+                <div class="item mb-5">
+                                <div class="row" style="margin-bottom: 1em;">
+
+                                {% if request.user == post.user %}
                                  <div class="row">
             <div class="col-md-3">
-
+              <nav class="blog-nav nav nav-justified my-5" style="width: 50%">
+                <a class="nav-link-next nav-item nav-link rounded" href='{% url "blog:post_delete" pk=post.id %}'>
+                    <i class="fa fa-trash"></i>
+                    Delete</a>
+            </nav>
 
             </div> &nbsp; &nbsp;
             <div class="col-md-3">
@@ -38,6 +43,8 @@
             </nav>
             </div>
         </div>
+                                {% else %}
+                                {% endif %}
                                 </div>
 
 
@@ -46,7 +53,7 @@
 
 
             <nav class="blog-nav nav nav-justified my-5">
-                <a class="nav-link-next nav-item nav-link rounded" href='{% url "blog:home" %}'>
+                <a class="nav-link-next nav-item nav-link rounded" href='http://thinkthanksurajit.com/project/'>
                     <i class="arrow-next fas fa-long-arrow-alt-left"></i>
                     Back</a>
             </nav>
