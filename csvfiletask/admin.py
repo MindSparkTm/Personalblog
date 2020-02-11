@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Invoice, File
+from .models import Invoice, File,Customer
 
 
 # Register your models here.
@@ -8,6 +8,9 @@ from .models import Invoice, File
 class FileAdmin(admin.ModelAdmin):
     list_display = ('file', 'timestamp','status')
 
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('id','name',)
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):

@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<html>
+<title>{% trans "CSV File Upload" %}</title>
+<body>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="{% trans "Upload File" %}" />
+</form>
+</body>
+</html>
