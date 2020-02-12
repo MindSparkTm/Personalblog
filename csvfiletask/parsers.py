@@ -1,6 +1,11 @@
 import pandas as pd
-from .models import Invoice, Customer, File
+from .models import Invoice, Customer
 from django.db import transaction
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 
 class FileParser:
     def __init__(self, upload):
@@ -12,6 +17,10 @@ class FileParser:
         return header
 
     def __parse_header(self):
+        '''
+        Parsing the header of the file
+        '''
+        logger.info('Parsing header')
         try:
             self.clear_results()
             file_data = pd.read_csv(self.upload.file.path, nrows=1).columns
@@ -26,13 +35,19 @@ class FileParser:
             else:
                 return True
         except Exception as ex:
+            logger.exception('Parsers:Exception in parsing header %s', str(ex))
             return
 
     def parse(self):
+        '''
+        Parse function to parse the body of the file
+        '''
+        logger.info('Parsers:File body Parsing initiated')
         if self.__parse_header():
             file_data = pd.read_csv(self.upload.file.path, sep=",")
             row_iter = file_data.iterrows()
             for index, row in row_iter:
+                # only commit non empty rows for compulsory header #
                 if not pd.isna(row['ContactName']) and not pd.isna(row['InvoiceNumber']) \
                         and not pd.isna(row['InvoiceDate']) and not pd.isna(row['DueDate']) \
                         and not pd.isna(row['Description']) and not pd.isna(row['Quantity']) \
@@ -55,6 +70,7 @@ class FileParser:
                         with transaction.atomic():
                             Invoice.objects.bulk_create(objs)
                     except Exception as ex:
+                        logging.exception('Parsers:Exception while committing records %s', str(ex))
                         continue
 
             return True
@@ -76,5 +92,5 @@ class FileParser:
             error['line'] = line
         if name:
             error['name'] = name
-        # logger.debug(u'FileParser:add_error - {} ({},{}).'.format(message, line, name))
+        logger.debug(u'Parsers:add_error - {} ({},{}).'.format(message, line, name))
         self.errors.append(error)
