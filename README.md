@@ -8,10 +8,13 @@ API endpoints
 4. /csvfile/total-transaction-monthly/ - Total transactions monthly
 
 //Endpoint to upload file
+
 5. /csvfile/file-upload - To upload a file using an interface
 
 Graphical Endpoints
+
 6./csvfile/plot-customer-total/ - To plot top five customers based on due amount
+
 7./csvfile/plot-invoice-thirty/2019-07-09/ - Plot 30 day + transactions based on an entered date
 
 The project is built using
