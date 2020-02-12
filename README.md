@@ -1,12 +1,15 @@
 # csvfileparser
 A simple CSV file app
+
 API endpoints
 1. /csvfile/upload/ - Uploading File using API from 
 2. /csvfile/top-five-customers-qty/ - API listing top 5 customers based on quantity 
 3. /csvfile/total-invoice-daily/2019-07-09/ - Listing total invoice daily based on a user entered date
 4. /csvfile/total-transaction-monthly/ - Total transactions monthly
-Endpoint to upload file
+
+//Endpoint to upload file
 5. /csvfile/file-upload - To upload a file using an interface
+
 Graphical Endpoints
 6./csvfile/plot-customer-total/ - To plot top five customers based on due amount
 7./csvfile/plot-invoice-thirty/2019-07-09/ - Plot 30 day + transactions based on an entered date
