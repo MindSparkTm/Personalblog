@@ -32,3 +32,8 @@ post_save signal is used. The bulk_create method doesn't call the built in model
 manually, we had to write a customer manager through which the post_save method is trigerred. The update_invoice_total() method
 is to used to calculate the total amount and F expression is used to update in order to avoid race conditions and have a 
 database lock while a particular record is being updated.
+
+Possible Improvements
+1. Celery can be used to handle the upload in the background for large file size
+2. Since, I am only using 40 records based on the sample csv file, I parsed the entire file and saved in a Python list and then committed the rows in one DB call. This is highly inefficient when it comes to file size which exceeds >4-5 GB as loading all the records in the memory will cause system breakdown. In such a case, a class BulkUploadManager can be built
+which will handle chunks of data of specific size loaded from a list and will commit to the DB. 
