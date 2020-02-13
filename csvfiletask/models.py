@@ -55,6 +55,24 @@ class File(models.Model):
     def __str__(self):
         return str(self.id)
 
+    def format_comment(self,existing_comment, prefix, new_comment):
+        if not new_comment:
+            return existing_comment
+        if not new_comment[-1] in ['.', '?', '!']:
+            new_comment += '.'
+        timestr = timezone.localtime(timezone.now()).strftime('%d-%b-%Y')
+        if existing_comment:
+            if not existing_comment[-1] in ['.', '?', '!']:
+                existing_comment += '.'
+            new_comment = u'{} {} [{}] {}'.format(existing_comment, timestr, prefix, new_comment)
+        else:
+            new_comment = u'{} [{}] {}'.format(timestr, prefix, new_comment)
+        return new_comment
+
+    def append_validation_result(self, prefix, validation_results):
+        self.validation_results = self.format_comment(self.validation_results, prefix, validation_results)
+
+
 
 class Customer(models.Model):
     '''
