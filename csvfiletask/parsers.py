@@ -1,5 +1,5 @@
 import pandas as pd
-from .models import Invoice, Customer
+from .models import Invoice, Customer,File
 from django.db import transaction
 import logging
 
@@ -23,14 +23,18 @@ class FileParser:
         logger.info('Parsing header')
         try:
             self.clear_results()
+            self.upload.status = File.STARTED
+            self.upload.save()
             file_data = pd.read_csv(self.upload.file.path, nrows=1).columns
-            print('file_data', file_data)
             header_rows = self.__get_header()
             for row in header_rows:
                 if row not in file_data:
                     message = u'{row} missing in header'.format(row=row)
                     self.add_error('header', message, 0)
             if len(self.errors) > 0:
+                self.upload.status = File.FAILED
+                self.upload.validation_results = u'{}'.format(self.errors)
+                self.upload.save()
                 return False
             else:
                 return True
@@ -71,10 +75,16 @@ class FileParser:
                             Invoice.objects.bulk_create(objs)
                     except Exception as ex:
                         logging.exception('Parsers:Exception while committing records %s', str(ex))
+                        self.upload.status = File.IN_PROGRESS
+                        self.upload.validation_results = self.upload.validation_results+'\n'+self.upload.validation_results
+                        self.upload.save()
                         continue
-
+            self.upload.status=File.COMPLETED
+            self.upload.save()
             return True
         else:
+            self.upload.status = File.FAILED
+            self.upload.save()
             return False
 
     def clear_results(self):

@@ -6,7 +6,7 @@ from .models import Invoice, File,Customer
 
 @admin.register(File)
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('file', 'timestamp','status')
+    list_display = ('id','file', 'timestamp','status')
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
