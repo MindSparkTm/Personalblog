@@ -113,7 +113,7 @@ def update_invoice_total(sender, instance, created, **kwargs):
         Invoice.objects.filter(number=instance.number) \
             .update(total=F('unit_amount') * F('quantity'))
     except Exception as ex:
-        logger.exception('Models:Invoice:Unable to calculate total'.format(ex))
+        logger.exception('Models:Invoice:Unable to calculate total %s',str(ex))
 
 
 post_save.connect(update_invoice_total, sender=Invoice)
