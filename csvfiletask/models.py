@@ -55,7 +55,7 @@ class File(models.Model):
     def __str__(self):
         return str(self.id)
 
-    def format_comment(self,existing_comment, prefix, new_comment):
+    def format_comment(self, existing_comment, prefix, new_comment):
         if not new_comment:
             return existing_comment
         if not new_comment[-1] in ['.', '?', '!']:
@@ -71,7 +71,6 @@ class File(models.Model):
 
     def append_validation_result(self, prefix, validation_results):
         self.validation_results = self.format_comment(self.validation_results, prefix, validation_results)
-
 
 
 class Customer(models.Model):
@@ -131,7 +130,7 @@ def update_invoice_total(sender, instance, created, **kwargs):
         Invoice.objects.filter(number=instance.number) \
             .update(total=F('unit_amount') * F('quantity'))
     except Exception as ex:
-        logger.exception('Models:Invoice:Unable to calculate total %s',str(ex))
+        logger.exception('Models:Invoice:Unable to calculate total %s', str(ex))
 
 
 post_save.connect(update_invoice_total, sender=Invoice)
