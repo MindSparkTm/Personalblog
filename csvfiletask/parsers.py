@@ -1,5 +1,5 @@
 import pandas as pd
-from .models import Invoice, Customer,File
+from .models import Invoice, Customer, File
 from django.db import transaction
 import logging
 
@@ -76,10 +76,11 @@ class FileParser:
                     except Exception as ex:
                         logging.exception('Parsers:Exception while committing records %s', str(ex))
                         self.upload.status = File.IN_PROGRESS
-                        self.upload.validation_results = self.upload.validation_results+'\n'+self.upload.validation_results
+                        self.upload.validation_results = self.upload.validation_results + '\n' \
+                                                         + self.upload.validation_results
                         self.upload.save()
                         continue
-            self.upload.status=File.COMPLETED
+            self.upload.status = File.COMPLETED
             self.upload.save()
             return True
         else:

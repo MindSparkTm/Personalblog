@@ -119,7 +119,6 @@ def ThirtyDayTranxPlot(request, user_date):
         .extra(select={'day': 'date(date)'}) \
         .values('date') \
         .annotate(total=Sum('total'))
-    print(invoice_list)
     total_transx = []
     tranx_date = []
     for i in range(len(invoice_list)):
